@@ -65,5 +65,8 @@ scatter3(x1,x2,y)
 
 % There seems to be a plane to describe the regression linearly
 
-% b) 
+% b) Give a suitable linear regression model with response variable y and explanatory variables x1 and
+% x2. Calculate the coeffcient of determination R2
+
+?
 
