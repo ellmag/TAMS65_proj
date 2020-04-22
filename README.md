@@ -16,35 +16,35 @@ Project course in mathematical statistics
     - [] d) Redo above but consider all observations. Calculate R2.
     - [] e) Calculate stationary points for strength and state what we can expect for these currents.
 
-3. [] Response Surface Regression
+3. [ ] Response Surface Regression
     - [x] a) Give suitable linear regression model. Calculate R2.
     - [] b) Plot estimated plane together with observations.
     - [] c) Consider new regression model. Calculate R2 for this. 
     - [] d) Test if additional variables added in (c) are useful. Plot estimated curved plane w/ obs. 
     - [] e) If seeking max chemical yield, what time and temp should you choose?
 
-4. [] Dummy variables
+4. [ ] Dummy variables
     - [] a) Analyze data according to model 1. Calculate R2.
     - [] b) Plot estimated regression lines together with observations.
     - [] c) Analyze acording to model 2. Calculate R2.
     - [] d) Plot estimated regression lines for model in (c) together with observations.
     - [] e) Construct CI and analyze if security programs lead to fewer working hours lost. 
 
-5. [] Forward selection
+5. [ ] Forward selection
     - [] a) Calculate correlations
     - [] b) Calculate R2. Do residual analysis.
     - [] c) Propose a model by forward selection. Calculate R2. Do residual analysis
     - [] d) Compare your proposed model in (c) with the full model using all 8 explanatory variables.
 
 
-6. [] Backward elimination
+6. [ ] Backward elimination
     - [] a) Calculate correlations
     - [] b) Calculate the coeffcient of determination R2
     - [] c) Propose a model by applying backward elimination. Calculate R2
     - [] d) Compare your proposed model in (c) with the full model using all 8 explanatory variables.
 
 
-7. [] All subsets regression
+7. [ ] All subsets regression
     - [] a) Calculate the coeffcient of determination R2
     - [] b) Propose a model by applying all subsets regression. Calculate R2
     - [] c) Compare your proposed model in (b) with the full model using all 8 explanatory variables. 
