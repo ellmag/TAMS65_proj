@@ -2,7 +2,7 @@
 Project course in mathematical statistics
 
 ## Assignments in Multiple Linear Regression
-1. [x ] Transformation of data
+1. [x] Transformation of data
     - [x] a) Scatter plot. Calculate correlation between y and x1.
     - [x] b) Give suitable linear regression model with transformed values as response variable.
     - [x] c) Scatter plot transformed value against x1. Calculate their correlation.
