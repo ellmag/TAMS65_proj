@@ -9,7 +9,7 @@ Project course in mathematical statistics
     - [x] d) Predict no. bacteria for summer day with temp of 25C and low humidity? Give CI to answer.
 
 
-2. [] Polynomial Regression
+2. [ ] Polynomial Regression
     - [x] a) Scatter plot observations x >  0.5, pattern?
     - [x] b) Give suitable linear regression model. Calculate R2.
     - [x] c) Do residual plot with observations. Suggest linear regression model based on (b). Calc R2.
