@@ -120,21 +120,13 @@ hold off
 
 
 
-% e) Calculate stationary points(min/max) y, and of strength based on x
+% e) Calculate stationary points(min/max) y, and CI of strength based on x
 b0 = stats3.beta(1)
 b1 = stats3.beta(2)
 b2 = stats3.beta(3)
 b3 = stats3.beta(4)
 
-u = b3;
-
-% Local stationary points from looking at regression-line plot
-% x_max = -1 with y_max = 116
-% x_min = 1.4 with y_min = 67.1
-
-% I.e for currents between x = [-2 ; 0] we can expect strength of 116
-% For currents between x = [1;2] we can expect strengths of 67.1
-
+% 
 %We want to solve stationary points(max/min) 
 
 

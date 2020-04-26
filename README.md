@@ -1,6 +1,5 @@
 # TAMS65
 Project course in mathematical statistics
-
 ## Assignments in Multiple Linear Regression
 1. [x] Transformation of data
     - [x] a) Scatter plot. Calculate correlation between y and x1.
@@ -8,13 +7,12 @@ Project course in mathematical statistics
     - [x] c) Scatter plot transformed value against x1. Calculate their correlation.
     - [x] d) Predict no. bacteria for summer day with temp of 25C and low humidity? Give CI to answer.
 
-
-2. [ ] Polynomial Regression
+2. [] Polynomial Regression
     - [x] a) Scatter plot observations x >  0.5, pattern?
     - [x] b) Give suitable linear regression model. Calculate R2.
     - [x] c) Do residual plot with observations. Suggest linear regression model based on (b). Calc R2.
-    - [ ] d) Redo above but consider all observations. Calculate R2.
-    - [ ] e) Calculate stationary points for strength and state what we can expect for these currents.
+    - [x] d) Redo above but consider all observations. Calculate R2.
+    - [] e) Calculate stationary points for strength and state what we can expect for these currents.
 
 3. [ ] Response Surface Regression
     - [x] a) Give suitable linear regression model. Calculate R2.
