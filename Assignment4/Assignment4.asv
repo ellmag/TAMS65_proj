@@ -82,6 +82,11 @@ b1 = mdl.Coefficients.Estimate(2);
 b2 = mdl.Coefficients.Estimate(3);
 b3 = mdl.Coefficients.Estimate(4);
 
+%Regression line for x2 = 0
+regrline1 = b0 + b1.*z1;
+%Regression line for x2=1
+regrline2 = (b0 +b2) + (b1+b3).*z1
+
 figure; scatter(z1,y, 'filled'); title('Z1 vs Y');
 hold on;
 %Regression line for x2 = 0
