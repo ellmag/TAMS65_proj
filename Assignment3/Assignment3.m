@@ -1,3 +1,5 @@
+
+% RESPONSE SURFACE REGRESSION
 %[y x1 x2]
   A=[78.392199241794643 -0.579331150945265 0.79041165803364488;
    79.83151836782497 -0.048018533489971559 0.18010009224610712;
@@ -52,21 +54,107 @@
 y=A(:,1);
 x1=A(:,2);
 x2=A(:,3);
+
+% For different types of chemical systems where the response variable y depends
+% on the explanatory variables t1 and t2, y = f(t1, t2), 
+% the response surface f can often be appropriately described with the
+% help of a second order of the polynomial model.
+% LET
 % y = chemical yield, 
 % t1 = reaction time in seconds, 
 % t2 = reaction temperature(C)
 
-% x1 =  (t1-90)/10
-% x2 = (t2 -145)/5
+% x1 =  (t1-90)/10, 80 <= t1 <= 100 -> -1<x1<1
+% x2 = (t2 -145)/5, 140 <= t2 <= 150 -> 1<x2<1
 
-% a) plot the data
+% a) Scatter plot observations against x1 and x2. 
 
-scatter3(x1,x2,y)
+figure; scatter3(x1, x2,y,  'filled'); title('X1 vs X2 vs Y')
+% There seems to be a plane to describe the regression linearly.
 
-% There seems to be a plane to describe the regression linearly
+% Give a suitable linear regression model with 
+% response variable y and explanatory variables x1 and x2. 
+% Calculate the coeffcient of determination R2
 
-% b) Give a suitable linear regression model with response variable y and explanatory variables x1 and
-% x2. Calculate the coeffcient of determination R2
 
-?
+% We looking for y = b0 + b1*x1 + b2*x2 + e
+
+
+X = [x1 x2]
+mdl1 = fitlm(X,y, 'linear')
+
+% Model with only Rsquared of 0.5. Not that much of variance explained.
+
+% -----------------------------------------------------
+
+% b) Plot estimated plane together with observations.
+
+figure;scatter3(x1,x2,y, 'filled'); title('Regression plane')
+hold on;
+[x1g,x2g]=meshgrid(-1:0.1:1,-1:0.1:1);
+yhat=79.2089+1.0631*x1g+0.5477*x2g;
+surf(x1g,x2g,yhat);
+
+%-----------------------------------------------------
+
+%  c) Consider new model 2: 
+%      y = b0 + b1*x1 + b2*x2 + b3*x1^2 + b4*x2^2 + b5*x1*x2
+x3 = x1.*x2;
+x4 = x1.*x1;
+x5 = x2.*x2;
+X2 = [x1 x2 x3 x4 x5];
+
+mdl2 = fitlm(X,y, 'y ~ x1 + x2 + x1^2 +x2^2 +x1*x2');
+mdl3 = fitlm(X2, y, 'linear');
+
+% Rsquared of 0.7489, much better than previous model.
+
+%-----------------------------------------------------
+
+% d) Test if added variables are useful. 
+
+% H0: b3 = b4 =b5 = 0 (all new explanatory variables are useless)
+% H1: atleast one of b3,b4.b5 are /= 0
+
+% Teststatistic:
+
+% W = ((SSe1 -SSe2)/p)/(SSe2/(n-k-p-1)
+% where
+% p: #new variables = 3
+% n - k -p -1 = dfe for model 2
+
+% Reject h0 if W > c, W~ F(p,n-k-p-1) if H0 true
+SSe1 = mdl1.SSE;
+SSe2 = mdl2.SSE;
+dfe2 = mdl2.DFE;
+p = 3;
+
+w = ((SSe1 -SSe2)/p)/(SSe2/dfe2)
+
+c = finv(0.99,p,dfe2)
+
+% w = 14.1 > 4.6 = c lets us reject H0.
+
+% I.e Model 2 seems to descibe data better than model 1.
+
+
+
+figure;scatter3(x1,x2,y, 'filled'); title('Regression plane model 2')
+hold on;
+[x1g,x2g]=meshgrid(-1:0.1:1,-1:0.1:1);
+yhat2=79.8225+1.0675.*x1g+0.4161.*x2g + 0.7493.*(x1g*x2g) -1.1999.*(x1g^2) -0.4545.*(x2g^2);
+surf(x1g,x2g,yhat2);
+
+
+% looks shifted up to much, but otherwise ok.
+
+% -------------------------------------------------------
+
+% e) Maximum chemical yield, what time and temp would one choose?
+
+maxYield = max(max(yhat2));
+% Max yield of 87.0757 for x1 = x2 = 1
+
+% I.e we would choose reaction time of 80, and temperature of 150C.
+
 

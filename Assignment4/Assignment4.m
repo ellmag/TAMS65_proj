@@ -1,3 +1,14 @@
+% ----------- DUMMY VARIABLES -------------------
+
+
+
+% In a study, one wanted to study whether an active security program has significance for the number of
+% working hours which lost due to accidents at work. 50 companies were randomly selected. Results:
+% Y = number of lost working hours during 1 year,
+% x1 = number of employees,
+% x2 = 1, if you have security program; 0, otherwise
+
+
 %[y x1 x2]
   A=[92.12811753495609 8135 1;
    52.372581043370793 1629 1;
@@ -53,3 +64,10 @@
 y=A(:,1);
 x1=A(:,2);
 x2=A(:,3);
+
+z1 = x1/1000;
+
+figure; scatter(z1,y, 'filled'); title('Z1 vs Y')
+
+
+

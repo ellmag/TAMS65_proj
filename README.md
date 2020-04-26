@@ -14,12 +14,12 @@ Project course in mathematical statistics
     - [x] d) Redo above but consider all observations. Calculate R2.
     - [] e) Calculate stationary points for strength and state what we can expect for these currents.
 
-3. [ ] Response Surface Regression
+3. [x] Response Surface Regression
     - [x] a) Give suitable linear regression model. Calculate R2.
-    - [ ] b) Plot estimated plane together with observations.
-    - [ ] c) Consider new regression model. Calculate R2 for this. 
-    - [ ] d) Test if additional variables added in (c) are useful. Plot estimated curved plane w/ obs. 
-    - [ ] e) If seeking max chemical yield, what time and temp should you choose?
+    - [x] b) Plot estimated plane together with observations.
+    - [x] c) Consider new regression model. Calculate R2 for this. 
+    - [x] d) Test if additional variables added in (c) are useful. Plot estimated curved plane w/ obs. 
+    - [x] e) If seeking max chemical yield, what time and temp should you choose?
 
 4. [ ] Dummy variables
     - [ ] a) Analyze data according to model 1. Calculate R2.
