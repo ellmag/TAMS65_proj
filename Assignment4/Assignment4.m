@@ -68,7 +68,7 @@ x1=A(:,2);
 x2=A(:,3);
 x2 = categorical(x2);
 z1 = x1/1000;
-% a) Analyze data according to model Y= b0 + b1*z1 +b2*x2 +e
+% a) Analyze data according to model Y= g0 + g1*z1 +g2*x2 +e
 
 figure; scatter(z1,y, 'filled'); title('Z1 vs Y');
 tbl = table(y,z1,x2, 'VariableNames',{'y','z1','x2'})
@@ -77,24 +77,57 @@ mdl = fitlm(tbl, 'y~ z1*x2')
 % Rsquared = 0.97 lost working hours seems to be explained by z1 and x2 well. 
 
 r2=mdl.Rsquared
-b0 = mdl.Coefficients.Estimate(1);
-b1 = mdl.Coefficients.Estimate(2);
-b2 = mdl.Coefficients.Estimate(3);
-b3 = mdl.Coefficients.Estimate(4);
+g0 = mdl.Coefficients.Estimate(1);
+g1 = mdl.Coefficients.Estimate(2);
+g2 = mdl.Coefficients.Estimate(3);
+g3 = mdl.Coefficients.Estimate(4);
 
-figure; scatter(z1,y, 'filled'); title('Z1 vs Y');
+h1 =figure; 
+set(h1,'name','Z1 vs Y with regression lines','numbertitle','on') % Setting the name of the figure
+clf(h1) % Erase the contents of the figure
+set(h1,'WindowStyle','docked') % Insert the figure to dock
+scatter(z1,y, 'filled'); title('Z1 vs Y');
 hold on;
 %Regression line for x2 = 0
-yhat0 = b0 + b1.*z1;
+yhat0 = g0 + g1.*z1;
 plot(z1,yhat0);
 hold on;
 %Regression line for x2=1
-yhat1 = (b0 +b2) + (b1+b3).*z1;
+yhat1 = (g0 +g2) + (g1+g3).*z1;
 plot(z1,yhat1);
 hold off;
 
 
-%  
+% c ) analyze with model 2:
+% y = b0 + b1*z1 + b2*z2 +e
+% with z1 = x1/1000, z2 = x2*z1
+x22=A(:,3);
+z2 = x22.*z1;
+
+mdl2 = fitlm([z1 z2], y, 'linear');
+r2_2 = mdl2.Rsquared;
+b0 = mdl2.Coefficients.Estimate(1);
+b1 = mdl2.Coefficients.Estimate(2);
+b2 = mdl2.Coefficients.Estimate(3);
+
+
+% Rsquared of 0.97, so same amount of variance explained, good!
+
+
+h2 =figure; 
+set(h2,'name','Z1 vs Y with regression lines','numbertitle','on') % Setting the name of the figure
+clf(h2) % Erase the contents of the figure
+set(h2,'WindowStyle','docked') % Insert the figure to dock
+scatter(z1,y, 'filled'); title('Z1 vs Y');
+hold on;
+%Regression line for x2 = 0
+yhat0 = g0 + g1.*z1;
+plot(z1,yhat0);
+hold on;
+%Regression line for x2=1
+yhat1 = (g0 +g2) + (g1+g3).*z1;
+plot(z1,yhat1);
+hold off;
 
 
 
