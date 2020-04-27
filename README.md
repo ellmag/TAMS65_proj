@@ -21,17 +21,17 @@ Project course in mathematical statistics
     - [x] d) Test if additional variables added in (c) are useful. Plot estimated curved plane w/ obs. 
     - [x] e) If seeking max chemical yield, what time and temp should you choose?
 
-4. [ ] Dummy variables
-    - [ ] a) Analyze data according to model 1. Calculate R2.
-    - [ ] b) Plot estimated regression lines together with observations.
-    - [ ] c) Analyze acording to model 2. Calculate R2.
-    - [ ] d) Plot estimated regression lines for model in (c) together with observations.
-    - [ ] e) Construct CI and analyze if security programs lead to fewer working hours lost. 
+4. [x] Dummy variables
+    - [x] a) Analyze data according to model 1. Calculate R2.
+    - [x] b) Plot estimated regression lines together with observations.
+    - [x] c) Analyze acording to model 2. Calculate R2.
+    - [x] d) Plot estimated regression lines for model in (c) together with observations.
+    - [x] e) Construct CI and analyze if security programs lead to fewer working hours lost. 
 
-5. [ ] Forward selection
-    - [ ] a) Calculate correlations
-    - [ ] b) Calculate R2. Do residual analysis.
-    - [ ] c) Propose a model by forward selection. Calculate R2. Do residual analysis
+5. [] Forward selection
+    - [x] a) Calculate correlations
+    - [x] b) Calculate R2. Do residual analysis.
+    - [x] c) Propose a model by forward selection. Calculate R2. Do residual analysis
     - [ ] d) Compare your proposed model in (c) with the full model using all 8 explanatory variables.
 
 
