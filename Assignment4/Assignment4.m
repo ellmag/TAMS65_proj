@@ -71,63 +71,89 @@ z1 = x1/1000;
 % a) Analyze data according to model Y= g0 + g1*z1 +g2*x2 +e
 
 figure; scatter(z1,y, 'filled'); title('Z1 vs Y');
-tbl = table(y,z1,x2, 'VariableNames',{'y','z1','x2'})
+tbl = table(y,z1,x2,z2, 'VariableNames',{'y','z1','x2','z2'})
 
-mdl = fitlm(tbl, 'y~ z1*x2')
-% Rsquared = 0.97 lost working hours seems to be explained by z1 and x2 well. 
+mdl = fitlm(tbl, 'y~ z1 + x2')
+% Rsquared = 0.89 lost working hours seems to be explained by z1 and x2
+% well..but can we improve?
 
-r2=mdl.Rsquared
+r2_1=mdl.Rsquared.Ordinary
 g0 = mdl.Coefficients.Estimate(1);
 g1 = mdl.Coefficients.Estimate(2);
 g2 = mdl.Coefficients.Estimate(3);
-g3 = mdl.Coefficients.Estimate(4);
+
 
 h1 =figure; 
-set(h1,'name','Z1 vs Y with regression lines','numbertitle','on') % Setting the name of the figure
+set(h1,'name', 'Model 1','numbertitle','on') % Setting the name of the figure
 clf(h1) % Erase the contents of the figure
 set(h1,'WindowStyle','docked') % Insert the figure to dock
-scatter(z1,y, 'filled'); title('Z1 vs Y');
+scatter(z1,y, 'filled'); title('Model1: Y= g0 + g1*z1 +g2*x2 +e');
 hold on;
 %Regression line for x2 = 0
 yhat0 = g0 + g1.*z1;
 plot(z1,yhat0);
 hold on;
 %Regression line for x2=1
-yhat1 = (g0 +g2) + (g1+g3).*z1;
+yhat1 = g0 + g1.*z1 + g2;
 plot(z1,yhat1);
 hold off;
 
-
+% -------------------------------
 % c ) analyze with model 2:
 % y = b0 + b1*z1 + b2*z2 +e
 % with z1 = x1/1000, z2 = x2*z1
-x22=A(:,3);
-z2 = x22.*z1;
 
-mdl2 = fitlm([z1 z2], y, 'linear');
-r2_2 = mdl2.Rsquared;
+
+%x22=A(:,3);
+
+mdl2 = fitlm(tbl, 'y~ z1 + x2*z1')
+
+r2_2 = mdl2.Rsquared.Ordinary;
 b0 = mdl2.Coefficients.Estimate(1);
 b1 = mdl2.Coefficients.Estimate(2);
 b2 = mdl2.Coefficients.Estimate(3);
+b3 = mdl2.Coefficients.Estimate(4);
 
+% Rsquared of 0.97, a bit(~9%) more of the variance can be explained with this
+% model, good!
 
-% Rsquared of 0.97, so same amount of variance explained, good!
-
+% ------------------------------------------
+% d) Plot model 2 with the regression lines
 
 h2 =figure; 
-set(h2,'name','Z1 vs Y with regression lines','numbertitle','on') % Setting the name of the figure
+set(h2,'name','Model 2','numbertitle','on') % Setting the name of the figure
 clf(h2) % Erase the contents of the figure
 set(h2,'WindowStyle','docked') % Insert the figure to dock
-scatter(z1,y, 'filled'); title('Z1 vs Y');
+scatter(z1,y, 'filled'); title('Model 2: y = b0 + b1*z1 + b2*z2 +e');
 hold on;
 %Regression line for x2 = 0
-yhat0 = g0 + g1.*z1;
+yhat0 = b0 + b1.*z1;
 plot(z1,yhat0);
 hold on;
 %Regression line for x2=1
-yhat1 = (g0 +g2) + (g1+g3).*z1;
+yhat1 = (b0 +b2) + (b1+b3).*z1;
 plot(z1,yhat1);
 hold off;
 
+% Much nicer fit for both lines, explains the increased Rsquared compared
+% to model 1.
+
+%----------------------------------
+% e) Does analysis give indication that security programs lead to fewer
+% working hours lost? Construct appropriate CI.
+
+%Significance test on b3 since the slope of the lines are the difference we
+%are looking for.
+% H0: b3 = 0 
+% H1: b3 /= 0
+anova(mdl2) 
+% null hypothesis is rejected at the 5% significance level => 
+% slopes not equal => security programs seem to reduce working hours lost.
+
+%Another test with confidence intervals
+betaCI=coefCI(mdl2);
+b3_CI =[betaCI(4,1) betaCI(4,2)]
+% CI for b3 does not include zero, which indicates that using security
+% program lower working hours lost. 
 
 
