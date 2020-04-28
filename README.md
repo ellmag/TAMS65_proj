@@ -42,8 +42,8 @@ Project course in mathematical statistics
     - [x] d) Compare your proposed model in (c) with the full model using all 8 explanatory variables.
 
 
-7. [ ] All subsets regression
-    - [ ] a) Calculate the coeffcient of determination R2
-    - [ ] b) Propose a model by applying all subsets regression. Calculate R2
-    - [ ] c) Compare your proposed model in (b) with the full model using all 8 explanatory variables. 
+7. [x] All subsets regression
+    - [x] a) Calculate the coeffcient of determination R2
+    - [x] b) Propose a model by applying all subsets regression. Calculate R2
+    - [x] c) Compare your proposed model in (b) with the full model using all 8 explanatory variables. 
 

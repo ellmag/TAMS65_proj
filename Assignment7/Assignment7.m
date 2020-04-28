@@ -1,5 +1,5 @@
 %[y x1 x2 x3 x4 x5 x6 x7 x8]
-  [91.374796247587554 0.8198710314213975 0 0 23.51970325614181 0.2369616370544268 ...
+ A = [91.374796247587554 0.8198710314213975 0 0 23.51970325614181 0.2369616370544268 ...
    4 16 483.45538456836061;
    138.11567187901727 5.4301716978798984 0 0 21.7688346355698 0.23174375253775342 ...
    3.9 15.209999999999999 442.51546040535072;
@@ -59,4 +59,68 @@
    1.2 1.44 425.63957222162719;
    38.250001899125564 3.5631610782460763 1 0 21.318970650257356 0.297173224576134 ...
    1.1 1.2100000000000002 444.26196909400153];
+
+
+y=A(:,1);   % Chemical Yield 
+x1=A(:,2); % amount of catalyst
+x2=A(:,3); % Preprocessing 2 (1/0)
+x3=A(:,4); % Preprocessing 3 (1/0)
+x4=A(:,5); % Humidity 
+x5=A(:,6); % % Oxygen in env
+x6=A(:,7); % time(s) for process
+x7=A(:,8); % square of time of process
+x8=A(:,9); % temperature(C)
+
+tbl = table(y,x1,x2,x3,x4,x5,x6,x7,x8, 'VariableNames',{'y','x1','x2','x3', 'x4','x5','x6','x7','x8'})
+%--------------------------------------------------------------------------------
+% a) Perform regression analysis with all 8 variables. Calculate Rsquared and
+% do residual analysis
+
+tbl.x2 = categorical(tbl.x2); % convert categorical data columns
+tbl.x3 = categorical(tbl.x3);
+
+mdl1 = fitlm(tbl, 'y~x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8')
+
+mdl1.Rsquared.Ordinary
+mdl1.SSE
+% Rsquared of 0.9978 and RMSE of 1.67(SSE= 58.6). Very nice. However, complex model. 
+
+% ---------------------------------------------------------------------------
+% b) Propose new model with all subsets regression. Calculate Rsquared.
+model = all_subset(yA,XA) % yA,XA are from Assignment7A, as data needed to be in matricies. 
+
+%Best model seem to indicate y = x1 + x2 + x4 +x5 +x6 +x7 +x8, with mse=2.71
+% Running a new model to verify numbers, which turns out ok. (MSE = 2.7132
+% verified)
+mdl2 = fitlm(tbl, 'y~x1 + x2 + x4 + x5 + x6 + x7 + x8')
+
+% -------------------------------------------------------------------------
+% c)  Compare full model(mdl1) with proposed model(mdl2)
+% Is the model significantly better?
+% Test H0: 
+% H0: b3 = 0 (the variable excluded from mdl2 make no difference)
+% H1: atleast one of b3 are /= 0
+
+% Teststatistic:
+
+% W = ((SSe2 -SSe1)/p)/(SSe1/(n-k-p-1)
+% where
+% p: #new variables = 1
+% n - k -p -1 = dfe for model 1
+
+% Reject h0 if W > c, W~ F(p,n-k-p-1) if H0 true
+SSe1 = mdl1.SSE;
+SSe2 = mdl2.SSE;
+dfe1 = mdl1.DFE;
+p = 1;
+
+w = ((SSe2 -SSe1)/p)/(SSe1/dfe1)
+
+c = finv(0.99,p,dfe1)
+
+% w = 0.3958 < 8.0166 = c ---> cannot reject H0
+
+% Answer: Full model does not seem to describe the data better than mdl2(all subsets). 
+
+
 
