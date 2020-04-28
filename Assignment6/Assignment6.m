@@ -1,3 +1,5 @@
+%  Backward elimination
+
 %[y x1 x2 x3 x4 x5 x6 x7 x8]
   A=[91.374796247587554 0.8198710314213975 0 0 23.51970325614181 0.2369616370544268 ...
    4 16 483.45538456836061;
@@ -60,12 +62,83 @@
    38.250001899125564 3.5631610782460763 1 0 21.318970650257356 0.297173224576134 ...
    1.1 1.2100000000000002 444.26196909400153];
 
-y=A(:,1);
-x1=A(:,2);
-x2=A(:,3);
-x3=A(:,4);
-x4=A(:,5);
-x5=A(:,6);
-x6=A(:,7);
-x7=A(:,8);
-x8=A(:,9);
+y=A(:,1);   % Chemical Yield 
+x1=A(:,2); % amount of catalyst
+x2=A(:,3); % Preprocessing 2 (1/0)
+x3=A(:,4); % Preprocessing 3 (1/0)
+x4=A(:,5); % Humidity 
+x5=A(:,6); % % Oxygen in env
+x6=A(:,7); % time(s) for process
+x7=A(:,8); % square of time of process
+x8=A(:,9); % temperature(C)
+
+tbl = table(y,x1,x2,x3,x4,x5,x6,x7,x8, 'VariableNames',{'y','x1','x2','x3', 'x4','x5','x6','x7','x8'})
+
+% ------------------------------------------------------------------------------
+% a)  Scatter plot y vs xi, i =[1:8], calculate their correlation.
+corrPlot = figure;
+[corr, Pvalue] = corrplot(tbl, 'testR','on');
+correlation = corr([x1 x2 x3 x4 x5 x6 x7 x8],y)
+
+%--------------------------------------------------------------------------------
+% b) Perform regression analysis with all 8 variables. Calculate Rsquared and
+% do residual analysis
+
+tbl.x2 = categorical(tbl.x2); % convert categorical data columns
+tbl.x3 = categorical(tbl.x3);
+
+% Model 1: y = b0 + b1*cat +b2*pp2 + ... + b8*temp
+mdl1 = fitlm(tbl, 'y~x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8')
+
+mdl1.Rsquared.Ordinary
+mdl1.SSE
+% Rsquared of 0.9978 and RMSE of 1.67(SSE= 58.6). Very nice. However, complex model. 
+
+% Residual analysis....
+
+% ------------------------------------------------------
+% c) Propose model by backward selection. Calculate Rsquared. 
+
+% 1. Choose significance level
+alpha = 0.05;
+% 2.  Analyze model with all variables(mdl1)
+
+% 3. Choose variable with highest p-value such that if p>alpha, goto step 4.  else STOP
+
+
+
+mdl2 = stepwiselm(tbl, 'y~ x1 +x2 +x3 +x4 + x5 +x6 +x7 +x8','verbose',2,'Penter',0) 
+% 
+
+% Final proposed model: 
+% y = 0.2622 +10.1*x1 + 1.6634*x2 - 6.7139*x4 +11.7114*x6 + 3.6675*x7 + 0.2831*x8
+
+%-------------------------------------------------------------------------
+% d) Compare full model(mdl1) with proposed model(mdlStep)
+% Is the model significantly better?
+% Test H0: 
+% H0: b3 = b5= 0 (the variables excluded from mdl2 make no difference)
+% H1: atleast one of b3,b5 are /= 0
+
+% Teststatistic:
+
+% W = ((SSe2 -SSe1)/p)/(SSe1/(n-k-p-1)
+% where
+% p: #new variables = 2
+% n - k -p -1 = dfe for model 1
+
+% Reject h0 if W > c, W~ F(p,n-k-p-1) if H0 true
+SSe1 = mdl1.SSE;
+SSe2 = mdl2.SSE;
+dfe1 = mdl1.DFE;
+p = 2;
+
+w = ((SSe2 -SSe1)/p)/(SSe1/dfe1)
+
+c = finv(0.99,p,dfe1)
+
+% w = 1.0159 < 5.78 = c ---> cannot reject H0
+
+% Answer: No. Full model does not seem to describe the data better than mdl2. 
+% Same model as in assignment 5, so makes sense that it would stop. 
+

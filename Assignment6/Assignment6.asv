@@ -1,6 +1,7 @@
-% FORWARD SELECTION
+%  Backward elimination
+
 %[y x1 x2 x3 x4 x5 x6 x7 x8]
-  A2=[91.374796247587554 0.8198710314213975 0 0 23.51970325614181 0.2369616370544268 ...
+  A=[91.374796247587554 0.8198710314213975 0 0 23.51970325614181 0.2369616370544268 ...
    4 16 483.45538456836061;
    138.11567187901727 5.4301716978798984 0 0 21.7688346355698 0.23174375253775342 ...
    3.9 15.209999999999999 442.51546040535072;
@@ -73,11 +74,14 @@ x8=A(:,9); % temperature(C)
 
 tbl = table(y,x1,x2,x3,x4,x5,x6,x7,x8, 'VariableNames',{'y','x1','x2','x3', 'x4','x5','x6','x7','x8'})
 
-% a)  Scatter plot y vs xi, i =[1:8]
+% ------------------------------------------------------------------------------
+% a)  Scatter plot y vs xi, i =[1:8], calculate their correlation.
 corrPlot = figure;
 [corr, Pvalue] = corrplot(tbl, 'testR','on');
+correlation = corr([x1 x2 x3 x4 x5 x6 x7 x8],y)
 
-% Perform regression analysis with all 8 variables. Calculate Rsquared and
+%--------------------------------------------------------------------------------
+% b) Perform regression analysis with all 8 variables. Calculate Rsquared and
 % do residual analysis
 
 tbl.x2 = categorical(tbl.x2); % convert categorical data columns
@@ -86,13 +90,17 @@ tbl.x3 = categorical(tbl.x3);
 % Model 1: y = b0 + b1*cat +b2*pp2 + ... + b8*temp
 mdl1 = fitlm(tbl, 'y~x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8')
 
-% Rsquared of 0.9978 and RMSE of 1.67. Very nice. However, complex model. 
+mdl1.Rsquared.Ordinary
+mdl1.SSE
+% Rsquared of 0.9978 and RMSE of 1.67(SSE= 58.6). Very nice. However, complex model. 
 
 % Residual analysis....
 
 % ------------------------------------------------------
-% c) Propose model by forward selection. Calculate Rsquared. 
+% c) Propose model by backward selection. Calculate Rsquared. 
 
+% 1. Choose significance level
+alpha = 0.05;
 % Start by choosing the variable with highest correlation to y. Looking at
 % corrplot we see that t(x6) has highest correlation of 0.63. 
 
@@ -101,18 +109,6 @@ mdl1 = fitlm(tbl, 'y~x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8')
 
 mdl2 = stepwiselm(tbl, 'y~ x6','verbose',2,'PRemove',0.99) 
 
-r2_2= mdl2.Rsquared.Ordinary
-%Rsquared of 0.9975 with 6 variables. RMSE = 1.67 as mdl1.
-% We could possibly better this by redoing with more strict threshold criterion to add terms. 
-
-mdl3= stepwiselm(tbl, 'y~ x6','verbose',2,'PRemove',0.99, 'PEnter',0.01) 
-%Maybe a bit to strict as we got good Rsquared= 0.987, but mean error is many
-%times higher at RMSE of 3.54 vs 1.67 on mdlStep.
-
-
-mdl4 = stepwiselm(tbl, 'y~ x6','verbose',2,'PRemove',0.99, 'PEnter',0.04) 
-% raising the ratio does not do much until we get back to the standard 0.05
-% p value criterion for the SSE.
 
 % Final proposed model: 
 % y = 0.2622 +10.1*x1 + 1.6634*x2 - 6.7139*x4 +11.7114*x6 + 3.6675*x7 + 0.2831*x8
@@ -144,13 +140,3 @@ c = finv(0.99,p,dfe1)
 % w = 1.0159 < 5.78 = c ---> cannot reject H0
 
 % Answer: No. Full model does not seem to describe the data better than mdl2. 
-
-
-
-
-
-
-
-
-
-

@@ -28,18 +28,18 @@ Project course in mathematical statistics
     - [x] d) Plot estimated regression lines for model in (c) together with observations.
     - [x] e) Construct CI and analyze if security programs lead to fewer working hours lost. 
 
-5. [] Forward selection
+5. [x] Forward selection
     - [x] a) Calculate correlations
     - [x] b) Calculate R2. Do residual analysis.
     - [x] c) Propose a model by forward selection. Calculate R2. Do residual analysis
-    - [ ] d) Compare your proposed model in (c) with the full model using all 8 explanatory variables.
+    - [x] d) Compare your proposed model in (c) with the full model using all 8 explanatory variables.
 
 
-6. [ ] Backward elimination
-    - [ ] a) Calculate correlations
-    - [ ] b) Calculate the coeffcient of determination R2
-    - [ ] c) Propose a model by applying backward elimination. Calculate R2
-    - [ ] d) Compare your proposed model in (c) with the full model using all 8 explanatory variables.
+6. [x] Backward elimination
+    - [x] a) Calculate correlations
+    - [x] b) Calculate the coeffcient of determination R2
+    - [x] c) Propose a model by applying backward elimination. Calculate R2
+    - [x] d) Compare your proposed model in (c) with the full model using all 8 explanatory variables.
 
 
 7. [ ] All subsets regression

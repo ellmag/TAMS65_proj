@@ -71,7 +71,7 @@ x6=A(:,7); % time(s) for process
 x7=A(:,8); % square of time of process
 x8=A(:,9); % temperature(C)
 
-tbl = table(y,x1,x2,x3,x4,x5,x6,x7,x8, 'VariableNames',{'y','cat','pp2','pp3', 'hum','oxy','t','t2','temp'})
+tbl = table(y,x1,x2,x3,x4,x5,x6,x7,x8, 'VariableNames',{'y','x1','x2','x3', 'x4','x5','x6','x7','x8'})
 
 % a)  Scatter plot y vs xi, i =[1:8]
 corrPlot = figure;
@@ -80,13 +80,13 @@ corrPlot = figure;
 % Perform regression analysis with all 8 variables. Calculate Rsquared and
 % do residual analysis
 
-tbl.pp2 = categorical(tbl.pp2); % convert categorical data columns
-tbl.pp3 = categorical(tbl.pp3);
+tbl.x2 = categorical(tbl.x2); % convert categorical data columns
+tbl.x3 = categorical(tbl.x3);
 
 % Model 1: y = b0 + b1*cat +b2*pp2 + ... + b8*temp
-mdl1 = fitlm(tbl, 'y~cat + pp2 + pp3 + hum + oxy + t + t2 + temp');
+mdl1 = fitlm(tbl, 'y~x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8')
 
-% Rsquared of 0.9978 and SSE of 58.6. Very nice. However, complex model. 
+% Rsquared of 0.9978 and RMSE of 1.67. Very nice. However, complex model. 
 
 % Residual analysis....
 
@@ -98,23 +98,52 @@ mdl1 = fitlm(tbl, 'y~cat + pp2 + pp3 + hum + oxy + t + t2 + temp');
 
 % stepwise with a high threshhold for removing(such that no variable is ever removed)
 % becomes a forward-selection algorithm.
-mdlStep = stepwiselm(tbl, 'y~ t','verbose',2,'PRemove',0.99) 
 
-r2_step= mdlStep.Rsquared.Ordinary
-%Model 2: y = 0.2623 +10.1*cat + 1.6634*pp
-%Rsquared of 0.9975 with 6 variables. We could possibly better this by
-%redoing with more strict threshold criterion to add terms. 
+mdl2 = stepwiselm(tbl, 'y~ x6','verbose',2,'PRemove',0.99) 
 
-mdlStep2 = stepwiselm(tbl, 'y~ t','verbose',2,'PRemove',0.99, 'PEnter',0.01) 
-%Maybe a bit to strict as we got good Rsquared= 0.987, but SSE is many
-%times higher at 337 vs 64 on mdlStep.
+r2_2= mdl2.Rsquared.Ordinary
+%Rsquared of 0.9975 with 6 variables. RMSE = 1.67 as mdl1.
+% We could possibly better this by redoing with more strict threshold criterion to add terms. 
+
+mdl3= stepwiselm(tbl, 'y~ x6','verbose',2,'PRemove',0.99, 'PEnter',0.01) 
+%Maybe a bit to strict as we got good Rsquared= 0.987, but mean error is many
+%times higher at RMSE of 3.54 vs 1.67 on mdlStep.
 
 
-mdlStep3 = stepwiselm(tbl, 'y~ t','verbose',2,'PRemove',0.99, 'PEnter',0.04) 
+mdl4 = stepwiselm(tbl, 'y~ x6','verbose',2,'PRemove',0.99, 'PEnter',0.04) 
 % raising the ratio does not do much until we get back to the standard 0.05
 % p value criterion for the SSE.
 
-mdlStep4 = stepwiselm(tbl, 'y~ t','upper','poly2,'verbose',2,'PRemove',0.99, 'PEnter',0.04) 
+% Final proposed model: 
+% y = 0.2622 +10.1*x1 + 1.6634*x2 - 6.7139*x4 +11.7114*x6 + 3.6675*x7 + 0.2831*x8
+
+%-------------------------------------------------------------------------
+% d) Compare full model(mdl1) with proposed model(mdlStep)
+% Is the model significantly better?
+% Test H0: 
+% H0: b3 = b5= 0 (the variables excluded from mdl2
+% H1: atleast one of b3,b5 are /= 0
+
+% Teststatistic:
+
+% W = ((SSe2 -SSe1)/p)/(SSe1/(n-k-p-1)
+% where
+% p: #new variables = 2
+% n - k -p -1 = dfe for model 1
+
+% Reject h0 if W > c, W~ F(p,n-k-p-1) if H0 true
+SSe1 = mdl1.SSE;
+SSe2 = mdl2.SSE;
+dfe1 = mdl1.DFE;
+p = 2;
+
+w = ((SSe2 -SSe1)/p)/(SSe1/dfe1)
+
+c = finv(0.99,p,dfe1)
+
+% w = 1.0159 > 4.6 = c lets us reject H0.
+
+% I.e Model 2 seems to descibe data better than model 1.
 
 
 
