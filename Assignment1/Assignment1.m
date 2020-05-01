@@ -35,17 +35,26 @@ x2=A(:,3); % binary, 0 for humidity <80%, 1: for >80%
 
 
 % a) 
-scatter(x1,log(y)) %Scatter plot y against x1
-corr1 = corr(x1,y) %Calculate correlation between them
+scatter(x1,y) %Scatter plot y against x1
+corr1 = corr(x1,log(y)) %Calculate correlation between them
 % corr = 0.6459
 
 %Conclusion: 
 % temperature(x1) does seem to correlate linearly according to scatter plot
 
 % b)
+tbl = table(logy,x1,x2, 'VariableNames',{'logy','x1','x2'})
+tbl.x2 = categorical(tbl.x2) % since binary
+mdl = fitlm(tbl, 'logy~ x1 + x2')
+
+
+
 X = [ones(size(x1)) x1 x2]; % y = 1 + b1*x1 + b2*x2
 logy = log(y);
 [b, bint] = regress(logy,X); 
+
+
+
 % Regr coef?f  : y = 1.1720 + 0.3849*x1 + 1.0057*x2
 
 % c) 
@@ -56,25 +65,26 @@ scatter(x1,logy,'*');
 hold on
 lsline %
 hold off
-
-scatter3(x1,x2,y,'filled')
-hold on
-x1fit = min(x1):100:max(x1);
-x2fit = 0:1;
-[X1FIT,X2FIT] = meshgrid(x1fit,x2fit);
-YFIT = b(1) + b(2)*X1FIT + b(3)*X2FIT;
-xlabel('temp')
-ylabel('humidity low/high')
-zlabel('#bacteria')
-view(50,10)
-hold off
 %}
 
 
 % d) Predict for 25C, low humidity
 
-P = [1 25 0];
+
+
+u = [1 25 0]';
+s2 = mdl.MSE;
+s = sqrt(s2);
+dfe = mdl.DFE
+t = tinv(0.975,dfe);
+betahat = mdl.Coefficients.Estimate
+Cbetahat = mdl.CoefficientCovariance
+XtXinv = Cbetahat/s2
+
+%Prediction interval for log(y) = beta0 + beta1*x1 + beta2*x2
+I_logy = [u'*betahat-t*s*sqrt(1+u'*XtXinv*u), u'*betahat+t*s*sqrt(1+u'*XtXinv*u)]
+I_Y = exp(I_logy);
+
 pred = P * b;
 predInterval = P * [bint(:,1) bint(:,2)]
-
 % CI_95: (6.5317 ; 15.0590)

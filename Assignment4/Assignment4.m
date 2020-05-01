@@ -66,13 +66,13 @@
 y=A(:,1);
 x1=A(:,2);
 x2=A(:,3);
-x2 = categorical(x2);
 z1 = x1/1000;
+z2 = z1.*x2;
 % a) Analyze data according to model Y= g0 + g1*z1 +g2*x2 +e
 
 figure; scatter(z1,y, 'filled'); title('Z1 vs Y');
 tbl = table(y,z1,x2,z2, 'VariableNames',{'y','z1','x2','z2'})
-
+tbl.x2 = categorical(tbl.x2);
 mdl = fitlm(tbl, 'y~ z1 + x2')
 % Rsquared = 0.89 lost working hours seems to be explained by z1 and x2
 % well..but can we improve?
@@ -153,7 +153,7 @@ anova(mdl2)
 %Another test with confidence intervals
 betaCI=coefCI(mdl2);
 b3_CI =[betaCI(4,1) betaCI(4,2)]
-% CI for b3 does not include zero, which indicates that using security
+% CI for beta4 does not include zero, which indicates that using security
 % program lower working hours lost. 
 
 

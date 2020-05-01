@@ -1,6 +1,6 @@
 % FORWARD SELECTION
 %[y x1 x2 x3 x4 x5 x6 x7 x8]
-  A2=[91.374796247587554 0.8198710314213975 0 0 23.51970325614181 0.2369616370544268 ...
+  A=[91.374796247587554 0.8198710314213975 0 0 23.51970325614181 0.2369616370544268 ...
    4 16 483.45538456836061;
    138.11567187901727 5.4301716978798984 0 0 21.7688346355698 0.23174375253775342 ...
    3.9 15.209999999999999 442.51546040535072;
@@ -99,7 +99,7 @@ mdl1 = fitlm(tbl, 'y~x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8')
 % stepwise with a high threshhold for removing(such that no variable is ever removed)
 % becomes a forward-selection algorithm.
 
-mdl2 = stepwiselm(tbl, 'y~ x6','verbose',2,'PRemove',0.99) 
+mdl2 = stepwiselm(tbl, 'y~ x6','verbose',2,'PRemove',1) 
 
 r2_2= mdl2.Rsquared.Ordinary
 %Rsquared of 0.9975 with 6 variables. RMSE = 1.67 as mdl1.

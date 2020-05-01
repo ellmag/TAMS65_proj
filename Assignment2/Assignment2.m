@@ -44,9 +44,9 @@ aScat = scatter(x1,y1,'*');
 % b) Give suitable regression model, calc R2 with y1 = B1*x1
 
 pFit = polyfit(x1,y1,2)
-lmFit2 = fitlm(x1,y1,'quadratic');
+lmFit2 = fitlm(x1,y1);
 b = lmFit2.Coefficients.Estimate
-yhat = X*b
+yhat = X.*b
 
 obsVregr = figure('name', 'obs vs regression line')
 plot(x1,y1,'o')
